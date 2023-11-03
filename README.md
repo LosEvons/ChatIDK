@@ -22,10 +22,7 @@ It's a prototype, until it isn't, and then we'll deal with the problems that com
 # How to set up (notes for self)
 1. Make sure you have Python3, venv and postgresql on your system
 2. Create a python venv in the project folder
-3. Install Flask in that environment
-4. Create a postgresql table called users with an id, username and a password field
-   ```
-   CREATE TABLE users (id SERIAL PRIMARY KEY, username TEXT, password TEXT);
-   ```
+3. ``` pip install -r requirements.txt ```
+4. ``` psql < schema.sql ```
 5. Create a .env file, or otherwise define a DATABASE_URL and a SECRET_KEY.
 6. Should work?

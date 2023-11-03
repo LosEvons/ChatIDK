@@ -15,3 +15,6 @@ Preferrable features improve the quality of life of the application and extra fe
   - Try to do it on the side, but don't get stuck while prototyping
 
 I have a faint idea to develop a music sharing system into the application to make it unique, but since that will most likely lead to issues with copyright and licencing, it will be left on the backburner.
+Similarly the current name of this repository and project is subject to change.
+
+It's a prototype, until it isn't, and then we'll deal with the problems that come from that.

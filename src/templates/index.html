@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+    <head>ChatIDK</head>
+
+    <body>
+        {% if session.username %}
+        <p>Olet kirjautunut nimellä {{ session.username }}</p>
+        <a href="/logout">Kirjaudu ulos</a>
+
+        {% elif chose_login %}
+        <form action="/login" method="POST">
+            <p>Tunnus:<br><input type="text" name="username"></p>
+            <p>Salasana:<br><input type="password" name="password"></p>
+            <input type="submit" value="Kirjaudu">
+        </form>
+            <p>{{ lerrmsg }}</p>
+
+        {% elif chose_register %}
+            <form action="/register" method="POST">
+                <p>Tunnus:<br><input type="text" name="username"></p>
+                <p>Salasana:<br><input type="password" name="password"></p>
+                <input type="submit" value="Rekisteröidy">
+            </form>
+
+        {% else %}
+            <a href="/chose_login">Kirjaudu</a>
+            <a href="/chose_register">Rekisteröidy</a>
+
+        {% endif %}
+
+        <p>{{ logmsg }}</p>
+    </body>
+
+</html>

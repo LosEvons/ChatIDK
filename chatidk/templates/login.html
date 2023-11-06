@@ -1,9 +1,9 @@
 {% extends "index.html" %}
-{% block head %}
+{% block header %}
 {{ super() }}
 <title>Kirjaudu</title>
 {% endblock %}
-{% block body %}
+{% block content %}
 <form action="/login" method="POST">
     <p>Tunnus:<br><input type="text" name="username"></p>
     <p>Salasana:<br><input type="password" name="password"></p>

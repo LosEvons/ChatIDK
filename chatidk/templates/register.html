@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+{% block head %}
+{{ super() }}
+<title>Rekisteröidy</title>
+{% endblock %}
+{% block body %}
+<form action="/register" method="POST">
+    <p>Tunnus:<br><input type="text" name="username"></p>
+    <p>Salasana:<br><input type="password" name="password"></p>
+    <input type="submit" value="Rekisteröidy">
+</form>
+{% endblock %}

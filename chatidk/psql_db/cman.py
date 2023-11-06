@@ -1,5 +1,4 @@
 from typing import Optional
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -25,7 +24,7 @@ class CredentialManager:
         else:
             return user.id
     
-    def register(self, username, password) -> str:
+    def register(self, username, password) -> Optional[str]:
         if self.username_in_database(username):
             return "Username already in use!"
         else:
@@ -33,9 +32,9 @@ class CredentialManager:
             sql = text("INSERT INTO users (username, password) VALUES (:username, :password)")
             self.__db.session.execute(sql, {"username":username, "password":hash_value})
             self.__db.session.commit()
-            return "Account created!"
+            return
         
-    def deactivate_user(self, username) -> str:
+    def deactivate_user(self, username) -> Optional[str]:
         user_id = self.get_entry_id(username)
         if not user_id:
             return "Username not found in database!"
@@ -43,10 +42,10 @@ class CredentialManager:
             sql = text("UPDATE users SET visible=FALSE WHERE id=:user_id")
             self.__db.session.execute(sql, {"user_id":user_id})
             self.__db.session.commit()
-            return "Account deactivated!"
+            return
                 
     def login(self, username, password) -> Optional[str]:
-        sql = text("SELECT id, password, visible FROM users WHERE username=:username")
+        sql = text("SELECT id, password, visible FROM users WHERE username=:username AND visible=TRUE")
         result = self.__db.session.execute(sql, {"username":username})
         user = result.fetchone()
         if not user:

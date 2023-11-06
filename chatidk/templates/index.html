@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        {% block head %}
+        <h1>ChatIDK</h1>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class=flashes>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <meta charset="UTF-8">
+        {% endblock %}
+    </head>
+
+    <body>
+        <div>
+            {% block body %}
+            {% if session.username %}
+            <p>Olet kirjautunut nimellä {{ session.username }}</p>
+            <form action="/logout" method="GET">
+                <input type="submit" value="Kirjaudu ulos">
+            </form>
+            <form action="/deactivate" method="GET">
+                <input type="submit" value="Poista tili">
+            </form>
+
+
+            {% else %}
+            <form action="/login" method="GET">
+                <input type="submit" value="Kirjaudu">
+            </form>
+            <form action="/register" method="GET">
+                <input type="submit" value="Rekisteröidy">
+            </form>
+
+            {% endif %}
+            {% endblock %}
+        </div>
+    </body>
+
+</html>

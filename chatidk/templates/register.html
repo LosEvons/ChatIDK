@@ -1,9 +1,9 @@
 {% extends "index.html" %}
-{% block head %}
+{% block header %}
 {{ super() }}
 <title>Rekisteröidy</title>
 {% endblock %}
-{% block body %}
+{% block content %}
 <form action="/register" method="POST">
     <p>Tunnus:<br><input type="text" name="username"></p>
     <p>Salasana:<br><input type="password" name="password"></p>

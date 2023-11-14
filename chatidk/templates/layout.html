@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="/static/style.css">
+<title>ChatIDK - {% block title %}{% endblock %}</title>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class=flashes>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+<h1> ChatIDK</h1>
+<form action="/" method="GET">
+    <input type="submit" value="Etusivu">
+</form>
+<form action="/login" method="GET">
+    <input type="submit" value="Kirjaudu">
+</form>
+<form action="/register" method="GET">
+    <input type="submit" value="Rekisteröidy">
+</form>
+<hr>
+{% block content %}{% endblock %}
+<hr>

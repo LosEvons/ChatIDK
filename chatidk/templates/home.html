@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block header %}
+{{ super() }}
+<title>Koti</title>
+{% endblock %}
+{% block content %}
+    {% if active_user %}
+        <li><span>{{ active_user }}</span>
+        <form action="/logout" method="GET">
+            <input type="submit" value="Kirjaudu ulos">
+        </form>
+        <form action="/deactivate" method="GET">
+            <input type="submit" value="Poista tili">
+        </form>
+        <div>
+        {% if users %}
+            {% for user in users %}
+                <li>{{ user }}</li>
+                <form action="/chat" method="GET">
+                    <input type="submit" name="{{ user }}" value="Keskustele">
+                </form>
+            {% endfor %}
+        {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

@@ -17,14 +17,14 @@ try:
 except OSError:
     pass
 
-# Initialize database
-from .psql_db import CredentialManager
-db = None
-def get_db():
-    global db
-    if db is None:
-        db = CredentialManager(SQLAlchemy(app))
-    return db
+# Initialize app
+from chatidk.engine.engine import Engine
+ngin = None
+def get_engine():
+    global ngin
+    if ngin is None:
+        ngin = Engine(SQLAlchemy(app))
+    return ngin
 
 # Import blueprints/views
 from .views import main

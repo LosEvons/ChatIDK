@@ -1,11 +1,11 @@
-from chatidk import get_db
-db = get_db() # Declare database
-from flask import Blueprint, render_template, request, session, redirect, flash
+from chatidk import get_engine
+ngin = get_engine() # Declare engine
+from flask import Blueprint, g, render_template, request, session, redirect, flash
 
 main = Blueprint("main", __name__)
 @main.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("home.html")
 
 @main.route("/login", methods=["GET", "POST"])
 def login():
@@ -20,9 +20,8 @@ def login():
             msg = "Password is required!"
             
         if msg is None:
-            err = db.login(username, password)
+            err = ngin.um.login(username, password)
             if not err:
-                session["username"] = username
                 flash("Logged in!")
                 return redirect("/")
             else:
@@ -45,9 +44,8 @@ def register():
             msg = "Password is required!"
             
         if msg is None:
-            err = db.register(username, password)
+            err = ngin.um.register(username, password)
             if not err:
-                session["username"] = username
                 flash("Account created!")
                 return redirect("/")
             else:
@@ -59,16 +57,16 @@ def register():
 
 @main.route("/logout", methods=["GET"])
 def logout():
-    del session["username"]
+    ngin.um.logout()
     flash("Logged out!")
     return redirect("/")
 
 @main.route("/deactivate", methods=["GET"])
 def deactivate():
     msg = None
-    err = db.deactivate_user(session["username"])
+    err = ngin.um.deactivate_user()
     if not err:
-        del session["username"]
+        ngin.um.logout()
         msg = "Account deactivated!"
     else:
         msg = err
@@ -76,3 +74,17 @@ def deactivate():
     flash(msg) 
             
     return redirect("/")
+
+@main.route("/chat")
+def chat():
+    print(request.form["user"])
+    
+
+# VARIABLE INJECTIONS
+@main.context_processor
+def inject_users():
+    return dict(users=ngin.um.get_other_users())
+
+@main.context_processor
+def inject_active_user():
+    return dict(active_user=ngin.um.au)

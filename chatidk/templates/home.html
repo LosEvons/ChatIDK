@@ -17,7 +17,7 @@
             {% for user in users %}
                 <li>{{ user }}</li>
                 <form action="/chat" method="GET">
-                    <input type="submit" name="{{ user }}" value="Keskustele">
+                    <button type="submit" name="chat" value="{{ user }}">Keskustele</button>
                 </form>
             {% endfor %}
         {% endif %}

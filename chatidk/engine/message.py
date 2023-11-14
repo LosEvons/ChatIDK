@@ -1,7 +1,8 @@
 from sqlalchemy.sql import text
+import datetime
 
 class Message:
-    def __init__(self, id: int, uid: int, cid: int, text: str, ts: str) -> None:
+    def __init__(self, id: int, uid: int, cid: int, text: str, ts: str):
         self.id = id
         self.uid = uid
         self.cid = cid
@@ -9,12 +10,15 @@ class Message:
         self.ts = ts
 
 class MessageManager:
-    def get_messages(cls, chat, db) -> list[Message]:
+    def __init__(self, db):
+        self.__db = db
+        
+    def get_messages(self, chat) -> list[Message]:
         sql = text("SELECT id, user_id, chat_id, content, created_at FROM messages WHERE chat_id=:chat_id")
-        result = db.session.execute(sql, {"chat_id":chat.id})
+        result = self.__db.session.execute(sql, {"chat_id":chat.id})
         raw_messages = result.fetchall()
         if not raw_messages:
-            raise Exception("No messages found in database!")
+            return None
         messages = []
         for message in raw_messages:
             messages.append(
@@ -25,7 +29,7 @@ class MessageManager:
                 )
         return messages
     
-    def add_message(cls, uid, cid, text, db) -> None:
-        sql = text("INSERT INTO messages (user_id, chat_id, content) VALUES (:uid, :cid, :text)")
-        db.session.execute(sql, {"cid":uid, "cid":cid, "text":text})
-        db.session.commit()
+    def add_message(self, uid: int, cid: int, msg: str) -> None:
+        sql = text("INSERT INTO messages (user_id, chat_id, content, created_at) VALUES (:user_id, :chat_id, :content, :created_at)")
+        self.__db.session.execute(sql, {"user_id":uid, "chat_id":cid, "content":msg, "created_at":datetime.datetime.now()})
+        self.__db.session.commit()

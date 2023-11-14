@@ -75,9 +75,18 @@ def deactivate():
             
     return redirect("/")
 
-@main.route("/chat")
+@main.route("/chat", methods=["GET", "POST"])
 def chat():
-    print(request.form["user"])
+    if request.method == "GET":
+        target_name = request.args.get("chat")
+        target_user = ngin.um.get_user(target_name)
+        ngin.cm.ac = ngin.cm.get_chat(ngin.um.au, target_user)
+    
+    elif request.method == "POST":
+        text = request.form["message"]
+        ngin.cm.mm.add_message(ngin.um.au.id, ngin.cm.ac.id, text)
+    
+    return render_template("chat.html")
     
 
 # VARIABLE INJECTIONS
@@ -88,3 +97,7 @@ def inject_users():
 @main.context_processor
 def inject_active_user():
     return dict(active_user=ngin.um.au)
+
+@main.context_processor
+def inject_chat():
+    return dict(chat=ngin.cm)

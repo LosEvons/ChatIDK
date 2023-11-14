@@ -2,7 +2,7 @@ from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
 
 class User:
-    def __init__(self, id: int, un: str, pw: str) -> None:
+    def __init__(self, id: int, un: str, pw: str):
         self.id = id
         self.un = un
         self.pw = pw
@@ -34,7 +34,7 @@ class UserManager:
                     users.remove(user)
         return users
     
-    def __get_user(self, username: str) -> User:
+    def get_user(self, username: str) -> User:
         sql = text("SELECT id, username, password FROM users WHERE username=:username AND visible=TRUE")
         result = self.__db.session.execute(sql, {"username":username})
         user = result.fetchone()
@@ -44,7 +44,7 @@ class UserManager:
             return User(user.id, user.username, user.password)
         
     def register(self, username, password) -> str:
-        if self.__get_user(username):
+        if self.get_user(username):
             return "Username already in use!"
         else:
             hash_value = generate_password_hash(password)
@@ -63,7 +63,7 @@ class UserManager:
             return
                 
     def login(self, username, password) -> str:
-        user = self.__get_user(username)
+        user = self.get_user(username)
         if not user:
             return "Bad username!"
         else:

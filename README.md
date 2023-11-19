@@ -25,4 +25,8 @@ It's a prototype, until it isn't, and then we'll deal with the problems that com
 3. ``` pip install -r requirements.txt ```
 4. ``` psql < schema.sql ```
 5. Create a .env file, or otherwise define a DATABASE_URL and a SECRET_KEY.
-6. Should work?
+6. Should work wheen ran in venv?
+
+# Progress
+Currently the application has working credential management and chat management. Currently not live updating or handling images. Style was copied from another project, and will very likely be left out of the
+project in the interest of saving time and resources, as well as to compensate for huge motivation loss caused by working on it. Multiple rewrites have left the abstractions in a satisfactory state, and while I'd love to rewrite it at least once more, I'll refrain from doing so to shift focus to preferrable features.

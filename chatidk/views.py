@@ -1,6 +1,8 @@
+import os
 from chatidk import get_engine
 ngin = get_engine() # Declare engine
-from flask import Blueprint, g, render_template, request, session, redirect, flash
+from flask import Blueprint, render_template, request, send_from_directory, redirect, flash, current_app
+from werkzeug.utils import secure_filename
 
 main = Blueprint("main", __name__)
 @main.route("/")
@@ -85,8 +87,19 @@ def chat():
     elif request.method == "POST":
         text = request.form["message"]
         ngin.cm.mm.add_message(ngin.um.au.id, ngin.cm.ac.id, text)
+        file = request.files["file"]
+        if file:
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(current_app.root_path, ngin.uf, filename)
+            file.save(filepath)
+            ngin.cm.mm.add_message_attachment(ngin.um.au.id, ngin.cm.ac.id, ngin.uf + "/" + filename)
     
     return render_template("chat.html")
+
+@main.route("/download/<path:filename>", methods=["GET", "POST"])
+def download(filename):
+    return send_from_directory(current_app.root_path, filename)
+    
     
 
 # VARIABLE INJECTIONS

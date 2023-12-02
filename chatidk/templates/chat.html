@@ -1,19 +1,42 @@
 {% extends "layout.html" %}
 {% block header %}
 {{ super() }}
-<title>{{ chat.ac.u1}} & {{ chat.ac.u2 }}</title>
+<title>{{ chat.ac.u1.un}} & {{ chat.ac.u2.un}}</title>
 {% endblock %}
 {% block content %}
     {% if chat.mm.get_messages(chat.ac) %}
         <div>
             {% for message in chat.mm.get_messages(chat.ac) %}
-                <li>{{ message.text }}</li>
+                {% if message.uid == active_user.id %}
+                    <div class="chat">
+                        <p> {{ chat.ac.u1.un }} </p>
+                        <p> {{ message.text }}</p>
+                        {% if chat.mm.has_attachment(message) %}
+                            <form action="{{ url_for('main.download', filename=chat.mm.get_message_attachment(message)) }}" method="POST">
+                                <button type="submit" name="download">Lataa</button>
+                            </form>
+                        {% endif %}
+                        <span class="time-right"> {{ message.ts }} </span>
+                    </div>
+                {% else %}
+                    <div class="chat darker">
+                        <p> {{ chat.ac.u2.un }} </p>
+                        <p> {{ message.text }}</p>
+                        {% if chat.mm.has_attachment(message) %}
+                            <form action="{{ url_for('main.download', filename=chat.mm.get_message_attachment(message)) }}" method="POST">
+                                <button type="submit" name="download">Lataa</button>
+                            </form>
+                        {% endif %}
+                        <span class="time-left"> {{ message.ts }} </span>
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
     {% endif %}
     
-    <form action="/chat" method="POST">
+    <form action="/chat" method="POST" enctype = "multipart/form-data">
         <input type="text" name="message">
+        <input type="file" name="file">
         <input type="submit" value="Lähetä">
     </form>
 

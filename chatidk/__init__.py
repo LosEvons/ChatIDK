@@ -23,7 +23,7 @@ ngin = None
 def get_engine():
     global ngin
     if ngin is None:
-        ngin = Engine(SQLAlchemy(app))
+        ngin = Engine(SQLAlchemy(app), app.config["UPLOAD_FOLDER"])
     return ngin
 
 # Import blueprints/views

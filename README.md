@@ -27,6 +27,7 @@ Next I am going to look into the file sharing system, and as to how I could impr
 
 # How to set up (notes for self)
 **1.** Make sure you have Python3, venv and postgresql on your system. Clone this repository onto your machine, and start in the root folder.
+
 **2.** In chatidk/config.py set your SECRET_KEY and SQLALCHEMY_DATABASE_URI.
 ```python
 class Config:

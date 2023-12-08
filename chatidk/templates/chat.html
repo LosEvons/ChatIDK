@@ -14,6 +14,7 @@
                         {% if chat.mm.has_attachment(message) %}
                             <form action="{{ url_for('main.download', filename=chat.mm.get_message_attachment(message)) }}" method="POST">
                                 <button type="submit" name="download">Lataa</button>
+                                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                             </form>
                         {% endif %}
                         <span class="time-right"> {{ message.ts }} </span>
@@ -25,6 +26,7 @@
                         {% if chat.mm.has_attachment(message) %}
                             <form action="{{ url_for('main.download', filename=chat.mm.get_message_attachment(message)) }}" method="POST">
                                 <button type="submit" name="download">Lataa</button>
+                                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                             </form>
                         {% endif %}
                         <span class="time-left"> {{ message.ts }} </span>
@@ -38,6 +40,7 @@
         <input type="text" name="message">
         <input type="file" name="file">
         <input type="submit" value="Lähetä">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>
 
 {% endblock %}

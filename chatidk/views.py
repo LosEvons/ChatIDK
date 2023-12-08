@@ -1,8 +1,13 @@
 import os
+import secrets
 from chatidk import get_engine
 ngin = get_engine() # Declare engine
-from flask import Blueprint, render_template, request, send_from_directory, redirect, flash, current_app
+from flask import Blueprint, abort, render_template, request, send_from_directory, redirect, flash, current_app, session
 from werkzeug.utils import secure_filename
+
+def check_csrf(csrf_token) -> None:
+    if session["csrf_token"] != csrf_token:
+        abort(403)
 
 main = Blueprint("main", __name__)
 @main.route("/")
@@ -25,6 +30,8 @@ def login():
             err = ngin.um.login(username, password)
             if not err:
                 flash("Logged in!")
+                # Prevent csrf vulnerability with session specific key
+                session["csrf_token"] = secrets.token_hex(16)
                 return redirect("/")
             else:
                 msg = err
@@ -59,14 +66,17 @@ def register():
 
 @main.route("/logout", methods=["GET"])
 def logout():
+    check_csrf(request.args.get("csrf_token"))
     ngin.um.logout()
+    del session["csrf_token"]
     flash("Logged out!")
     return redirect("/")
 
 @main.route("/deactivate", methods=["GET"])
 def deactivate():
+    check_csrf(request.args.get("csrf_token"))
     msg = None
-    err = ngin.um.deactivate_user()
+    err = ngin.um.deactivate_user(ngin.um.au)
     if not err:
         ngin.um.logout()
         msg = "Account deactivated!"
@@ -80,11 +90,13 @@ def deactivate():
 @main.route("/chat", methods=["GET", "POST"])
 def chat():
     if request.method == "GET":
+        check_csrf(request.args.get("csrf_token"))
         target_name = request.args.get("chat")
         target_user = ngin.um.get_user(target_name)
         ngin.cm.ac = ngin.cm.get_chat(ngin.um.au, target_user)
     
     elif request.method == "POST":
+        check_csrf(request.form["csrf_token"])
         text = request.form["message"]
         ngin.cm.mm.add_message(ngin.um.au.id, ngin.cm.ac.id, text)
         file = request.files["file"]
@@ -98,6 +110,7 @@ def chat():
 
 @main.route("/download/<path:filename>", methods=["GET", "POST"])
 def download(filename):
+    check_csrf(request.form["csrf_token"])
     return send_from_directory(current_app.root_path, filename)
     
     
